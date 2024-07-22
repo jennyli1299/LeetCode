@@ -28,6 +28,19 @@ s consists of parentheses only '()[]{}'.
 
 ----------------------
 
+Test Cases:
+
+Input: s = "()"
+Expected: true
+
+Input: s = "()[]{}"
+Expected: true
+
+Input: s = "(]"
+Expected: false
+
+----------------------
+
 Swift:
 class Solution {
     func isValid(_ s: String) -> Bool {
