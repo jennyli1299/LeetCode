@@ -1,0 +1,81 @@
+28. Find the Index of the First Occurrence in a String (Topics: Two Pointers, String, String Matching)
+
+Given two strings needle and haystack, return the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack. 
+
+
+Example 1:
+Input: haystack = "sadbutsad", needle = "sad"
+Output: 0
+Explanation: "sad" occurs at index 0 and 6.
+The first occurrence is at index 0, so we return 0.
+
+Example 2:
+Input: haystack = "leetcode", needle = "leeto"
+Output: -1
+Explanation: "leeto" did not occur in "leetcode", so we return -1.
+ 
+
+Constraints:
+1 <= haystack.length, needle.length <= 104
+haystack and needle consist of only lowercase English characters.
+
+----------------------
+
+Clarifying Questions/Callouts/Notes: We need to keep track of multiple possible string matches at a time. For example: haystack: "mississippi" & needle: "issip"
+
+----------------------
+
+Test Cases: 
+
+Input: haystack = "sadbutsad", needle = "sad"
+Expected: 0
+
+Input: haystack = "leetcode", needle = "leeto"
+Expected: -1
+
+Input: haystack = "a", needle = "a"
+Expected: 0
+
+Input: haystack = "mississpi", needle = "issip"
+Expected: 4
+
+Input: haystack = "abc", needle = "c"
+Expected: 2
+
+Input: haystack = "abc", needle = "a"
+Expected: 0
+
+----------------------
+
+// Swift:
+class Solution {
+    func strStr(_ haystack: String, _ needle: String) -> Int {
+        guard haystack.count >= needle.count else { return -1 } // ensure needle can be contained within haystack by length comparison ONLY
+        if haystack == needle { return 0 } // trivial case where haystack and needle are one and the same -> return 0
+
+        let needleArr = Array(needle) // for easy access to each character during String matching
+        var numMatched: [Int] = [] // array to keep track of potential matches where the value represents number of characters matched -> if # of chars matched == needle.count -> we have found the full needle
+
+        for (idx, letter) in haystack.enumerated() { // for each letter (at idx)
+            for (mIdx, idxCharToCompare) in numMatched.enumerated() { // & for each potential match
+                if idxCharToCompare > 0, letter == needleArr[idxCharToCompare] { // ensure this is still a valid potential, check if this letter in haystack matches the next letter needed in the needle
+                    numMatched[mIdx]+=1 // we matched, increase count of # chars matched for this value
+                    if numMatched[mIdx] == needle.count { // check if we've matched entire needle
+                        return idx+1-needle.count // if so, take current index of letter + 1 - length of needle
+                    }
+                } else { // did not match
+                    numMatched[mIdx] = -1 // invalidate by setting value to -1
+                }
+            }
+
+            if letter == needleArr[0] { // check if there's a new potential match by comparing current letter against beginning of needle
+                numMatched.append(1) // if this could be the start of the needle, add potential value to numMatched
+                if needleArr.count == 1 { // trivial case where the needle is one character
+                    return idx // return the current index within haystack
+                }
+            }
+        }
+
+        return -1 // no needle found within haystack -> return -1
+    }
+}
