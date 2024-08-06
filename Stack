@@ -1,4 +1,4 @@
-public struct Stack<Element> {
+public struct Stack<Element: Equatable>: Equatable {
     private var storage: [Element] = []
     public init() { }
     
