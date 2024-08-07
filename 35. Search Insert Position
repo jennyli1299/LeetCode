@@ -1,0 +1,77 @@
+35. Search Insert Position (Topics: Array, Binary Search)
+
+Given a sorted array of distinct integers and a target value, return the index if the target is found. If not, return the index where it would be if it were inserted in order.
+
+You must write an algorithm with O(log n) runtime complexity.
+
+
+Example 1:
+Input: nums = [1,3,5,6], target = 5
+Output: 2
+
+Example 2:
+Input: nums = [1,3,5,6], target = 2
+Output: 1
+
+Example 3:
+Input: nums = [1,3,5,6,7], target = 7
+Output: 4
+
+
+Constraints:
+1 <= nums.length <= 10^4
+-10^4 <= nums[i] <= 10^4
+nums contains distinct values sorted in ascending order.
+-10^4 <= target <= 10^4
+
+----------------------
+
+Clarifying Questions/Callouts/Notes: Can the array be empty? No, but let's catch that edge case anyway in case that assumption changes
+
+----------------------
+
+Test Cases: 
+
+Input: nums = [1,3,5,6], target = 5
+Expected: 2
+
+Input: nums = [1,3,5,6], target = 2
+Output: 1
+
+Input: nums = [1,3,5,6,7], target = 7
+Output: 4
+
+----------------------
+
+// Swift:
+class Solution {
+    func searchInsert(_ nums: [Int], _ target: Int) -> Int {
+        // trivial cases
+        // empty array // target is smaller than nums[0]
+        guard !nums.isEmpty, target > nums[0] else { 
+            return 0
+        }
+        // target is greater than nums.last
+        if nums[nums.count-1] < target {
+            return nums.count
+        }
+        
+        var start: Int = 0
+        var end: Int = nums.count-1
+        
+        while start <= end {
+            var mid = (start+end)/2
+            let midVal = nums[mid]
+            if midVal == target {
+                return mid
+            }
+            if midVal > target {
+                end = mid-1
+            } else {
+                start = mid+1
+            }
+        }
+        
+        return start // Time Complexity = O(log n)
+    }
+}
