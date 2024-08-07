@@ -1,0 +1,75 @@
+1. Two Sum (Topics: Array, Hash Table)
+
+Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+
+You can return the answer in any order.
+ 
+
+Example 1:
+Input: nums = [2,7,11,15], target = 9
+Output: [0,1]
+Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
+
+Example 2:
+Input: nums = [3,2,4], target = 6
+Output: [1,2]
+
+Example 3:
+Input: nums = [3,3], target = 6
+Output: [0,1]
+ 
+
+Constraints:
+2 <= nums.length <= 10^4
+-10^9 <= nums[i] <= 10^9
+-10^9 <= target <= 10^9
+Only one valid answer exists.
+
+----------------------
+
+Clarifying Questions/Callouts/Notes: Can duplicate values exist in num? Yes. What is the return value if we cannot find a valid answer? For now, empty array.
+
+----------------------
+
+Test Cases:
+
+Input: nums = [2,7,11,15], target = 9
+Expected: [0,1]
+
+Input: nums = [3,2,4], target = 6
+Expected: [1,2]
+
+Input: nums = [3,3], target = 6
+Expected: [0,1]
+
+----------------------
+
+Swift:
+class Solution {
+    func twoSum(_ nums: [Int], _ target: Int) -> [Int] {
+        var numIdxDict: [Int: Int] = Dictionary<Int, Int>()
+        // iterate through the array and add the enumerated key-value pairs to the Dictionary
+        for (idx, num) in nums.enumerated() {
+        // if num already exists in Dictionary, we have a duplicate number
+        // because there is only one valid unique answer, either this duplicate is significant to the answer (AKA num + num = target), or duplicate is insignificant and we can do nothing
+            if let existingIdx = numIdxDict[num], (num*2==target) {
+                return [existingIdx, idx]
+            } else {
+                numIdxDict[num] = idx
+            }
+        }
+
+        // iterate through enumerated array once more
+        for (idx, num) in nums.enumerated() {
+            // check for difference (target - current iteration value) in the Dictionary // ensure the found difference is not at the same idx as current num
+            if let differenceIdx = numIdxDict[(target-num)], differenceIdx != idx {
+                return [differenceIdx, idx]
+            }
+        }
+
+        return []
+        // Time Complexity: O(n)
+    }
+}
