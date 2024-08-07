@@ -1,0 +1,29 @@
+class BinaryNode<Element> {
+  var value: Element
+  var leftChild: BinaryNode?
+  var rightChild: BinaryNode?
+
+  init(value: Element) {
+    self.value = value
+  }
+}
+
+extension BinaryNode { // example of visit: array.append($0) in tree.traverseInOrder { array.append($0) }
+  func traverseInOrder(visit: (Element) -> Void) {
+    leftChild?.traverseInOrder(visit: visit)
+    visit(value)
+    rightChild?.traverseInOrder(visit: visit)
+  }
+
+  func traversePreOrder(visit: (Element) -> Void) {
+    visit(value)
+    leftChild?.traverseInOrder(visit: visit)
+    rightChild?.traverseInOrder(visit: visit)
+  }
+
+  func traversePostOrder(visit: (Element) -> Void) {
+    leftChild?.traverseInOrder(visit: visit)
+    rightChild?.traverseInOrder(visit: visit)
+    visit(value)
+  }
+}
