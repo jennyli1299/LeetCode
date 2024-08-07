@@ -1,0 +1,63 @@
+205. Isomorphic Strings (Topics: String, Hash Table)
+
+Given two strings s and t, determine if they are isomorphic.
+
+Two strings s and t are isomorphic if the characters in s can be replaced to get t.
+
+All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character, but a character may map to itself.
+ 
+
+Example 1:
+Input: s = "egg", t = "add"
+Output: true
+
+Example 2:
+Input: s = "foo", t = "bar"
+Output: false
+
+Example 3:
+Input: s = "paper", t = "title"
+Output: true
+ 
+
+Constraints:
+1 <= s.length <= 5 * 10^4
+t.length == s.length
+s and t consist of any valid ascii character.
+
+----------------------
+
+Clarifying Questions/Callouts/Notes: Does case/casing matter?
+
+----------------------
+
+Additional Test Cases / Edge Cases: 
+
+Input: s = "bbbaaaba", t = "aaabbbba"
+Expected: false
+
+----------------------
+
+Swift:
+class Solution {
+    func isIsomorphic(_ s: String, _ t: String) -> Bool {
+        var s = Array(s), t = Array(t)
+        // return Set(zip(s,t)).count == Set(s).count == Set(t).count
+
+        var isomorphicMap = Dictionary<Character, Character>()
+        var takenMappingValues = Set<Character>()
+
+        for (sChar, tChar) in zip(s, t) {
+            if let tVal = isomorphicMap[sChar] {
+                guard tVal == tChar else { return false }
+            } else if takenMappingValues.contains(tChar) {
+                return false
+            } else {
+                isomorphicMap[sChar] = tChar
+                takenMappingValues.insert(tChar)
+            }
+        }
+
+        return true
+    }
+}
