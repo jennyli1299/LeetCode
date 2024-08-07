@@ -1,0 +1,106 @@
+108. Convert Sorted Array to Binary Search Tree (Topics: Array, Divide and Conquer, Tree, Binary Search Tree, Binary Tree)
+
+Given an integer array nums where the elements are sorted in ascending order, convert it to a 
+height-balanced binary search tree.
+ 
+
+Example 1:
+Input: nums = [-10,-3,0,5,9]
+Output: [0,-3,9,-10,null,5]
+Explanation: [0,-10,5,null,-3,null,9] is also accepted.
+
+Example 2:
+Input: nums = [1,3]
+Output: [3,1]
+Explanation: [1,null,3] and [3,1] are both height-balanced BSTs.
+ 
+
+Constraints:
+1 <= nums.length <= 10^4
+-10^4 <= nums[i] <= 10^4
+nums is sorted in a strictly increasing order.
+
+----------------------
+
+Clarifying Questions/Callouts/Notes: Strictly increasing order => No repeating integers!
+
+----------------------
+
+Test Cases:
+
+Input: nums = [-10,-3,0,5,9]
+Expected: [0,-3,9,-10,null,5] or [0,-10,5,null,-3,null,9]
+
+Input: nums = [1,3]
+Expected: [1,null,3] OR [3,1]
+
+----------------------
+
+//Swift:
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+
+class Solution {
+    func sortedArrayToBST(_ nums: [Int]) -> TreeNode? {
+        // Base Case
+        if nums.isEmpty {
+            return nil
+        }
+        if nums.count == 1 {
+            return TreeNode(nums[0])
+        }
+
+        // Find midIdx of nums and create TreeNode with value nums[midIdx]
+        let midIdx = nums.count/2
+        let root = TreeNode(nums[midIdx])
+
+        // add leftNode from recursive call using first half of nums
+        root.left = sortedArrayToBST(Array(nums[..<midIdx])) // Tradeoff since we need to create an array from ArraySlice<Int>
+        // add rightNode from recursive call using last half of nums
+        root.right = sortedArrayToBST(Array(nums[midIdx+1..<nums.count])) // Not great for memory => We can do better with INDEX POINTERS
+
+        return root // return complete TreeNode
+    }
+}
+
+- OR -
+
+class Solution {
+    func sortedArrayToBST(_ nums: [Int]) -> TreeNode? {
+        return sortedArrayToBST(nums, startIdx: 0, endIdx: nums.count-1)
+    }
+
+    func sortedArrayToBST(_ nums: [Int], startIdx: Int, endIdx: Int) -> TreeNode? {
+        // Base Case
+        if endIdx < startIdx {
+            return nil
+        }
+        if startIdx == endIdx {
+            return TreeNode(nums[startIdx])
+        }
+
+        // Find midIdx of nums and create TreeNode with value nums[midIdx]
+        let midIdx = (startIdx + endIdx)/2
+        let root = TreeNode(nums[midIdx])
+
+        // add leftNode from recursive call using first half of nums
+        root.left = sortedArrayToBST(nums, startIdx: startIdx, endIdx: midIdx-1)
+        // add rightNode from recursive call using last half of nums
+        root.right = sortedArrayToBST(nums, startIdx: midIdx+1, endIdx: endIdx)
+
+        return root // return completed TreeNode
+    }
+}
