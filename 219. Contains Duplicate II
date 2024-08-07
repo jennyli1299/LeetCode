@@ -1,0 +1,57 @@
+219. Contains Duplicate II (Topics: Array, Hash Table, Sliding Window)
+
+Given an integer array nums and an integer k, return true if there are two distinct indices i and j in the array such that nums[i] == nums[j] and abs(i - j) <= k.
+
+
+Example 1:
+Input: nums = [1,2,3,1], k = 3
+Output: true
+
+Example 2:
+Input: nums = [1,0,1,1], k = 1
+Output: true
+
+Example 3:
+Input: nums = [1,2,3,1,2,3], k = 2
+Output: false
+ 
+
+Constraints:
+
+1 <= nums.length <= 10^5
+-10^9 <= nums[i] <= 10^9
+0 <= k <= 10^5
+
+----------------------
+
+Clarifying Questions/Callouts/Notes: ?
+
+----------------------
+
+Additional Test Cases / Edge Cases: 
+
+Input: nums = [1,2,3,1,2,3], k = 2
+Expected: false
+
+----------------------
+
+Swift:
+class Solution {
+    func containsNearbyDuplicate(_ nums: [Int], _ k: Int) -> Bool {
+        var valIdxMap: [Int: Int] = Dictionary<Int, Int>() // [Int: Int]()
+
+        for (idx, val) in nums.enumerated() {
+            if let seenIdx = valIdxMap[val] {
+                if idx - seenIdx <= k {
+                    return true
+                } else {
+                    valIdxMap[val] = idx
+                }
+            } else {
+                valIdxMap[val] = idx
+            }
+        }
+
+        return false
+    }
+}
