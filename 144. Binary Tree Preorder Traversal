@@ -1,0 +1,114 @@
+144. Binary Tree Preorder Traversal (Topics: Stack, Tree, Depth-First Search, Binary Tree)
+
+Given the root of a binary tree, return the preorder traversal of its nodes' values.
+
+
+Example 1:
+Input: root = [1,null,2,3]
+Output: [1,2,3]
+
+Example 2:
+Input: root = []
+Output: []
+
+Example 3:
+Input: root = [1]
+Output: [1]
+ 
+
+Constraints:
+The number of nodes in the tree is in the range [0, 100].
+-100 <= Node.val <= 100
+
+
+Follow up: Recursive solution is trivial, could you do it iteratively?
+
+----------------------
+
+Clarifying Questions/Callouts/Notes: Can the tree be empty? Yes. Are the values in the tree unique? Not necessarily.
+
+----------------------
+
+Additional Test Cases / Edge Cases:
+
+Input: root = [1,7,4,4,3,6,7,null,null,1]
+Expected: [1,7,4,3,1,4,6,7]
+
+Input: root = [1,7,4,4,3,6,7,6,7,1]
+Expected: [1,7,4,6,7,3,1,4,6,7]
+
+Input: root = [7,3,4,4,1,2,1,2,1]
+Expected: [7,3,4,2,1,1,4,2,1]
+
+Input: root = [7,3,4,5,1,2,9,0,8,6]
+Expected: [7,3,5,0,8,1,6,4,2,9]
+
+----------------------
+
+// Swift:
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+
+// RECURSIVE SOLUTION
+class Solution {
+    func preorderTraversal(_ root: TreeNode?) -> [Int] {
+        // trivial case & base case
+        guard let root = root else { 
+            return [] 
+        }
+
+        var traversal: [Int] = []
+
+        // visit root
+        traversal.append(root.val)
+
+        // visit left child
+        traversal.append(contentsOf: preorderTraversal(root.left))
+
+        // visit right child
+        traversal.append(contentsOf: preorderTraversal(root.right))
+
+        return traversal 
+    }
+}
+
+- OR -
+
+// ITERATIVE SOLUTION
+class Solution {
+    func preorderTraversal(_ root: TreeNode?) -> [Int] {
+        var traversal: [Int] = []
+        var stack: [TreeNode] = []
+        var currNode: TreeNode? = root
+
+        while !stack.isEmpty || currNode != nil {
+            while currNode != nil {
+                if let current = currNode {
+                    traversal.append(current.val) // traverse root node
+                    stack.append(current)
+                    currNode = current.left // visit left child
+                }
+            }
+
+            currNode = stack.popLast()
+            if let current = currNode {
+                currNode = current.right // visit right child
+            }
+        }
+
+        return traversal 
+    }
+}
