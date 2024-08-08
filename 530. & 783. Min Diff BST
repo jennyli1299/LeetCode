@@ -1,0 +1,112 @@
+530. Minimum Absolute Difference in BST (Topics: Tree, Depth-First Search, Breadth-First Search, Binary Search Tree, Binary Tree)
+783. Minimum Distance Between BST Nodes (Topics: Tree, Depth-First Search, Breadth-First Search, Binary Search Tree, Binary Tree)
+
+Given the root of a Binary Search Tree (BST), return the minimum absolute difference between the values of any two different nodes in the tree.
+Given the root of a Binary Search Tree (BST), return the minimum difference between the values of any two different nodes in the tree.
+
+
+Example 1:
+Input: root = [4,2,6,1,3]
+Output: 1
+
+Example 2:
+Input: root = [1,0,48,null,null,12,49]
+Output: 1
+
+Example 3:
+Input: root = [1]
+Output: [1]
+ 
+
+Constraints:
+The number of nodes in the tree is in the range [2, 100].
+0 <= Node.val <= 10^5
+
+----------------------
+
+Clarifying Questions/Callouts/Notes: Clarify absolute difference. 
+  Are there any constraints on what the values of the nodes can be? 
+  Can they be negative values? What is the type of the nodes? Is there a type definition?
+  What type is the value of these nodes?
+  What would you like the return type to be?
+  Can the root node be null? Are we guaranteed at least two nodes? What should be returned in the case that there are less than two nodes?
+
+----------------------
+
+Additional Test Cases / Edge Cases:
+
+Input: root = [5,2,9,1,4]
+Expected: 1
+
+Input: root = [0,null,2236,1277,2776,519]
+Expected: 519
+
+----------------------
+
+// Swift:
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+
+class Solution {
+    func getMinimumDifference(_ root: TreeNode?) -> Int {
+        // KEY => INORDER TRAVERSAL OF BST IS SORTED ARRAY
+        var sorted: [Int] = inorderTraversal(root)
+        guard sorted.count >= 2 else { return 0 }
+        var minDiff = Int.max
+        for (a, b) in zip(sorted, sorted.dropFirst()) {
+            if b-a < minDiff {
+                minDiff = b-a
+            }
+        }
+        return minDiff
+    }
+
+    func inorderTraversal(_ root: TreeNode?) -> [Int] {
+        // base case / trivial case
+        guard let root = root else { return [] }
+
+        var traversal: [Int] = []
+
+        traversal.append(contentsOf: inorderTraversal(root.left))
+        traversal.append(root.val)
+        traversal.append(contentsOf: inorderTraversal(root.right))
+
+        return traversal
+    }
+}
+
+- OR - 
+
+class Solution {
+    func minDiffInBST(_ root: TreeNode?) -> Int {
+        // KEY => INORDER TRAVERSAL OF BST IS SORTED ARRAY
+        var sorted: [Int] = inorderTraversal(root)
+        guard sorted.count >= 2 else { return 0 }
+        var minDiff = Int.max
+        for (a, b) in zip(sorted, sorted.dropFirst()) {
+            if b-a < minDiff {
+                minDiff = b-a
+            }
+        }
+        return minDiff
+    }
+
+    func inorderTraversal(_ root: TreeNode?) -> [Int] {
+        // base case / trivial case
+        guard let root = root else { return [] }
+        return inorderTraversal(root.left) + [root.val] + inorderTraversal(root.right)
+    }
+}
