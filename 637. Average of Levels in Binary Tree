@@ -1,0 +1,87 @@
+637. Average of Levels in Binary Tree (Topics: Tree, Depth-First Search, Breadth-First Search, Binary Tree)
+
+Given the root of a binary tree, return the average value of the nodes on each level in the form of an array. Answers within 10-5 of the actual answer will be accepted.
+
+
+Example 1:
+Input: root = [3,9,20,null,null,15,7]
+Output: [3.00000,14.50000,11.00000]
+
+Example 2:
+Input: root = [3,9,20,15,7]
+Output: [3.00000,14.50000,11.00000]
+ 
+
+Constraints:
+The number of nodes in the tree is in the range [1, 10^4].
+-2^31 <= Node.val <= (2^31) - 1
+
+----------------------
+
+Clarifying Questions/Callouts/Notes: Can the tree be empty? Yes. What should I return in the case that the root node is nil? Let's say empty array for now.
+
+----------------------
+
+Additional Test Cases / Edge Cases:
+
+Input: root = [7,3,4,4,1,2,1,2,1]
+Expected: [7, 3.5, 2, 1.5]
+
+Input root = []
+Expected: []
+
+----------------------
+
+// Swift:
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+ 
+class Solution {
+    func averageOfLevels(_ root: TreeNode?) -> [Double] {
+        // trivial case
+        guard let root = root else { 
+            return [] 
+        }
+
+        var levelAverages: [Double] = []
+        var queue: [TreeNode] = [root]
+        var numNodesInLevel = queue.count
+
+        while numNodesInLevel > 0 {
+            var sumNodesInLevel: Double = 0.0
+            for _ in 0..<numNodesInLevel {
+            // dequeue numNodesInLevel from queue
+            let node = queue.removeFirst() // O(n)
+            sumNodesInLevel = sumNodesInLevel + Double(node.val)
+
+            // enqueue each of their children
+            if let left = node.left {
+                queue.append(left)
+            }
+            if let right = node.right {
+                queue.append(right)
+            }
+            }
+            // calculate avg = sum of numNodesInLevel / numNodesInLevel
+            // append avg to levelAverages
+            levelAverages.append(sumNodesInLevel/Double(numNodesInLevel))
+
+            // set numNodesInLevel to new count
+            numNodesInLevel = queue.count
+        }
+        return levelAverages
+    }
+}
