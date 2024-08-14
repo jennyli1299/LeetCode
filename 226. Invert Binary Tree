@@ -1,0 +1,110 @@
+226. Invert Binary Tree (Topics: Tree, Depth-First Search, Breadth-First Tree, Binary Tree)
+
+Given the root of a binary tree, invert the tree, and return its root.
+
+
+Example 1:
+Input: root = [4,2,7,1,3,6,9]
+Output: [4,7,2,9,6,3,1]
+
+Example 2:
+Input: root = [2,1,3]
+Output: [2,3,1]
+
+Example 3:
+Input: root = []
+Output: []
+ 
+
+Constraints:
+
+The number of nodes in the tree is in the range [0, 100].
+-100 <= Node.val <= 100
+
+
+(Follow up: Recursive solution is trivial, could you do it iteratively?)
+
+----------------------
+
+Clarifying Questions/Callouts/Notes: Can the tree be empty? Yes. Are the values in the tree unique? Not necessarily.
+
+----------------------
+
+Additional Test Cases / Edge Cases:
+
+Input: root = [2,1,1]
+Expected: [2,1,1]
+
+----------------------
+
+// Swift:
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+
+// RECURSIVE SOLUTION
+class Solution {
+    func invertTree(_ root: TreeNode?) -> TreeNode? {
+        // edge cases & base case
+        guard let root = root else {
+            return nil
+        }
+        
+        // swap the left and right children -> invert
+        let left: TreeNode? = root.left
+        root.left = root.right
+        root.right = left
+
+        // recursive call on left & right children to invert subtrees
+        root.right = invertTree(root.right)
+        root.left = invertTree(root.left)
+
+        // return root node
+        return root
+    }
+}
+
+- OR -
+
+// ITERATIVE SOLUTION
+class Solution {
+    func invertTree(_ root: TreeNode?) -> TreeNode? {
+        // trivial case & edge case
+        guard let root = root else {
+            return nil
+        }
+
+        var stack: [TreeNode] = [root]
+
+        while !stack.isEmpty {
+            // get current node
+            if let currentNode = stack.popLast() {
+                // swap left & right children -> invert
+                let temp = currentNode.left
+                currentNode.left = currentNode.right
+                currentNode.right = temp
+                
+                // push children onto stack to be processed
+                if let left = currentNode.left {
+                    stack.append(left)
+                }
+                if let right = currentNode.right {
+                    stack.append(right)
+                }
+            }
+        }
+        return root
+    }
+}
