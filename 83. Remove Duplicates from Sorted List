@@ -1,0 +1,73 @@
+83. Remove Duplicates from Sorted List (Topics: Linked List)
+
+Given the head of a sorted linked list, delete all duplicates such that each element appears only once. Return the linked list sorted as well.
+
+
+Example 1:
+Input: head = [1,1,2]
+Output: [1,2]
+
+Example 2:
+Input: head = [1,1,2,3,3]
+Output: [1,2,3]
+ 
+
+Constraints:
+The number of nodes in the list is in the range [0, 300].
+-100 <= Node.val <= 100
+The list is guaranteed to be sorted in ascending order.
+
+----------------------
+
+Clarifying Questions/Callouts/Notes: Can Linked List argument be nil?
+
+----------------------
+
+Additional Test Cases / Edge Cases:
+
+Input: root = []
+Expected: []
+
+----------------------
+
+// Swift:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func deleteDuplicates(_ head: ListNode?) -> ListNode? {
+        // trivial case => head is null
+        guard let head = head else {
+            return nil
+        }
+
+        // set curr pointer to head
+        var curr = head
+
+        // variable to hold currentValue (NOT TO BE duplicated)
+        var currVal = head.val
+
+        // while curr.next is not null, run
+        while curr.next != nil {
+            if let next = curr.next {
+                // case 1: found duplicate => next.val == currVal
+                if next.val == currVal || next.val < currVal {
+                    curr.next = next.next
+                } else { // case 2: not duplicate value => next.val != currVal
+                    currVal = next.val
+                    curr = next
+                }
+            }
+        }
+
+        // return linked list in sorted order without duplicates
+        return head
+    }
+}
