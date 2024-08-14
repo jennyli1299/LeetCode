@@ -39,10 +39,7 @@ Additional Test Cases / Edge Cases: ?
 // Swift:
 class Solution {
     func isPalindrome(_ s: String) -> Bool {
-        // var str = s.filter{!$0.isWhitespace && "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM".contains($0)}
-        let pattern = "[^A-Za-z0-9]+"
-        let str = s.replacingOccurrences(of: pattern, with: "", options: [.regularExpression])
-        var strArr = Array(str.lowercased())
+        var strArr = getOnlyValidCharsForPalindrome(s)
 
         var beg = 0
         var end = strArr.count-1
@@ -56,5 +53,21 @@ class Solution {
         }
 
         return true
+    }
+
+    func getOnlyValidCharsForPalindrome(_ s: String) -> [Character] {
+        var alphaNumeric = s.filter{!$0.isWhitespace && "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM".contains($0)}
+
+        - OR -
+
+        let pattern = "[^A-Za-z0-9]+"
+        let alphaNumeric = s.replacingOccurrences(of: pattern, with: "", options: [.regularExpression])
+
+        - OR -
+
+        let alphaNumeric = s.components(separatedBy: CharacterSet.alphanumerics.inverted).joined()
+
+        let arr = Array(alphaNumericArg.lowercased())
+        return arr
     }
 }
