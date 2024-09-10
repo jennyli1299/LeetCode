@@ -1,0 +1,91 @@
+101. Symmetric Tree (Topics: Tree, Depth-First Search, Breadth-First Search, Binary Tree)
+
+Given the root of a binary tree, check whether it is a mirror of itself (i.e., symmetric around its center).
+
+
+Example 1:
+Input: root = [1,2,2,3,4,4,3]
+Output: true
+
+Example 2:
+Input: root = [1,2,2,null,3,null,3]
+Output: false
+ 
+
+Constraints:
+The number of nodes in the tree is in the range [1, 1000].
+-100 <= Node.val <= 100
+ 
+
+Follow up: Could you solve it both recursively and iteratively?
+
+----------------------
+
+Clarifying Questions/Callouts/Notes: Can the tree be empty? What should I return if this is the case: the tree is empty?
+
+----------------------
+
+Additional Test Cases / Edge Cases:
+
+Input: root = []
+Expected: false
+
+----------------------
+
+// Swift:
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+
+// RECURSIVE SOLUTION
+class Solution {
+    func isSymmetric(_ root: TreeNode?) -> Bool {
+        guard let root = root else { return false }
+        return isMirrored(left: root.left, right: root.right)
+    }
+
+    func isMirrored(left: TreeNode?, right: TreeNode?) -> Bool {
+        if left == nil && right == nil {
+            return true
+        } else if let left = left, let right = right {
+            guard left.val == right.val else {
+                return false
+            }
+            return isMirrored(left: left.left, right: right.right) && isMirrored(left: right.left, right: left.right)
+        } else { return false }
+    }
+}
+
+// ITERATIVE SOLUTION
+class Solution {
+    func isSymmetric(_ root: TreeNode?) -> Bool {
+        guard let root = root else { return false }
+        if root.left == nil && root.right == nil { return true }
+        guard let rootLeft = root.left, let rootRight = root.right else { return false }
+        var mirrorMatchQueue: [(TreeNode?, TreeNode?)] = [(rootLeft, rootRight)]
+        
+        while !mirrorMatchQueue.isEmpty {
+            let node = mirrorMatchQueue.removeFirst()
+            let (left, right) = node
+            if let left = left, let right = right, (left.val == right.val) { 
+                mirrorMatchQueue.append((left.left, right.right))
+                mirrorMatchQueue.append((left.right, right.left))
+            } else if node.0 != nil || node.1 != nil {
+                return false
+            }
+        }
+        return true
+    }
+}
