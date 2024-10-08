@@ -73,3 +73,30 @@ class Solution {
         return hasPathSum(root.left, targetSum - root.val) || hasPathSum(root.right, targetSum - root.val)
     }
 }
+
+// ITERATIVE SOLUTION
+class Solution {
+    func hasPathSum(_ root: TreeNode?, _ targetSum: Int) -> Bool {
+        guard let root = root else {
+            return false
+        }
+
+        var queue:[(node: TreeNode, sum: Int)] = [(root, 0)]
+
+        while !queue.isEmpty {
+            let tuple = queue.removeFirst()
+            let newSum = tuple.sum + tuple.node.val
+            if tuple.node.left == nil && tuple.node.right == nil && newSum == targetSum {
+                return true
+            }
+            if let left = tuple.node.left {
+                queue.append((left, newSum))
+            }
+            if let right = tuple.node.right {
+                queue.append((right, newSum))
+            } 
+        }
+
+        return false
+    }
+}
