@@ -1,0 +1,104 @@
+1146. Snapshot Array (Topics: Array, Hash Table, Binary Search, Design)
+
+Implement a SnapshotArray that supports the following interface:
+
+- SnapshotArray(int length) initializes an array-like data structure with the given length. Initially, each element equals 0.
+- void set(index, val) sets the element at the given index to be equal to val.
+- int snap() takes a snapshot of the array and returns the snap_id: the total number of times we called snap() minus 1.
+- int get(index, snap_id) returns the value at the given index, at the time we took the snapshot with the given snap_id
+
+
+
+Example 1:
+Input: ["SnapshotArray","set","snap","set","get"]
+       [[3],[0,5],[],[0,6],[0,0]]
+Output: [null,null,0,null,5]
+Explanation: 
+SnapshotArray snapshotArr = new SnapshotArray(3); // set the length to be 3
+snapshotArr.set(0,5);  // Set array[0] = 5
+snapshotArr.snap();  // Take a snapshot, return snap_id = 0
+snapshotArr.set(0,6);
+snapshotArr.get(0,0);  // Get the value of array[0] with snap_id = 0, return 5
+ 
+
+Constraints:
+1 <= length <= 5 * 10^4
+0 <= index < length
+0 <= val <= 10^9
+0 <= snap_id < (the total number of times we call snap())
+At most 5 * 10^4 calls will be made to set, snap, and get.
+
+----------------------
+
+Clarifying Questions/Callouts/Notes: Are we guaranteed to only get valid arguments for set and get? Is there is a risk of having array out of bounds? Can I assume anything about the validity of the input arguments?
+
+----------------------
+
+Additional Test Cases / Edge Cases: 
+
+Input: ["SnapshotArray","snap","snap","get","set","snap","set"]
+       [[4],[],[],[3,1],[2,4],[],[1,4]]
+Expected: [null,0,1,0,null,2,null]
+
+Input: ["SnapshotArray","set","snap","snap","set","set","get","get","get"]
+       [[3],[1,6],[],[],[1,19],[0,4],[2,1],[2,0],[0,1]]
+Expected: [null,null,0,1,null,null,0,0,0]
+
+----------------------
+
+Swift:
+class SnapshotArray {
+    private typealias SnappedValue = (snap_id: Int, value: Int)
+    private var snap_id: Int = 0
+    private var snapshotArray: [[SnappedValue]]
+
+    // private var snapshotHistory: [Int: [Int]] = [Int:[Int]]()
+    // Dictionary<Int, [Int]>() // [Int: [Int]]()
+
+    init(_ length: Int) {
+        self.snapshotArray = Array(repeating: [(snap_id, 0)], count: length)
+        // self.snapshotHistory[snap_id] = self.snapshotArray
+    }
+    
+    func set(_ index: Int, _ val: Int) {
+        guard index < self.snapshotArray.count else { return }
+        if var lastSnappedValue = snapshotArray[index].last, lastSnappedValue.snap_id == self.snap_id {
+            snapshotArray[index][snapshotArray[index].count-1].value = val
+        } else {
+            snapshotArray[index].append((self.snap_id, val))
+        }
+    }
+    
+    func snap() -> Int {
+        let snapId = self.snap_id
+        self.snap_id = snapId + 1
+        return snapId
+    }
+    
+    func get(_ index: Int, _ snap_id: Int) -> Int {
+        guard snap_id < self.snap_id else { return 0 }
+        let snapAtIdx = self.snapshotArray[index]
+        var l = 0, r = snapAtIdx.count-1
+        while l < r {
+            let m = (l+r)/2
+            if snapAtIdx[m].snap_id > snap_id {
+                r = m-1
+            } else if snapAtIdx[m].snap_id < snap_id {
+                l = m+1
+            } else {
+                return snapAtIdx[m].value
+            }
+        }
+        if snapAtIdx[l].snap_id > snap_id {
+            return snapAtIdx[l-1].value
+        } else { return snapAtIdx[l].value }
+    }
+}
+
+/**
+ * Your SnapshotArray object will be instantiated and called as such:
+ * let obj = SnapshotArray(length)
+ * obj.set(index, val)
+ * let ret_2: Int = obj.snap()
+ * let ret_3: Int = obj.get(index, snap_id)
+ */
