@@ -1,0 +1,70 @@
+204. Count Primes [Medium] (Topics: Array, Math, Enumeration, Number Theory)
+
+Given an integer n, return the number of prime numbers that are strictly less than n.
+
+Example 1:
+Input: n = 10
+Output: 4
+Explanation: There are 4 prime numbers less than 10, they are 2, 3, 5, 7.
+
+Example 2:
+Input: n = 0
+Output: 0
+
+Example 3:
+Input: n = 1
+Output: 0
+ 
+
+Constraints:
+0 <= n <= 5 * 10^6
+
+----------------------
+
+Clarifying Questions/Callouts/Notes: Can I assume that the input n will be non-negative?
+
+----------------------
+
+Additional Test Cases / Edge Cases:
+
+Input: n = 2
+Expected: 1
+
+----------------------
+
+// Swift:
+class Solution {
+    
+    var foundPrimes = [Int]() // hold all found primes
+    var lowestUnchecked: Int = 2 // NOT including itself
+
+    func countPrimes(_ n: Int) -> Int {
+        // trivial case
+        guard 1 < n else { return 0 }
+        
+        if n == lowestUnchecked {
+            return foundPrimes.count
+        } else if n > lowestUnchecked {
+            while lowestUnchecked < n {
+                if checkPrime(target: lowestUnchecked) {
+                    foundPrimes.append(lowestUnchecked)
+                }
+                lowestUnchecked += 1
+            }
+            return foundPrimes.count
+        } else { // n < lowestUnchecked
+            // binary search to find index of first number in foundPrimes > n
+            return foundPrimes.count // filler
+        }
+    }
+    
+    private func checkPrime(target: Int) -> Bool {
+	    // Sieve of Eratosthenes formula
+        let root = Int(Double(target).squareRoot())
+        for i in foundPrimes {
+            if i > root { break }
+            if target % i == 0 { return false }
+        }
+        return true
+    }
+}
